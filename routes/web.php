@@ -23,6 +23,5 @@ Route::get('/login/logout', 'LoginController@logout');
 
 //FileUploader
 Route::get('/uploader', 'UploaderController@index');
-Route::get('/uploader/add', 'UploaderController@add');
-Route::get('/uploader/edit', 'UploaderController@edit');
-Route::get('/uploader/list', 'UploaderController@list');
+Route::match(['get', 'post'], '/uploader/add', 'UploaderController@add');
+Route::match(['get', 'post'], '/uploader/remove', 'UploaderController@remove');
