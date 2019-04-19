@@ -18,4 +18,5 @@
   <br />
   <div class="container box">
    <h3 align="center">BlueMega FileUploader Login</h3><br />
+   <a href="login/logout">Disconnect</a><br />
 index
