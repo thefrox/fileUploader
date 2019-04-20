@@ -10,13 +10,25 @@
 <body style="background: lightgrey">
     <div id="content"></div>
     
-    <div style="width:350px;height: 350px; border: 1px solid whitesmoke ;text-align: center;float: left" id="image"><img width="100%" href="javascript:removeFile()" height="100%" id="" src=""/></div>
     
     <center>
         <div style="clear:both; display:block">
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#fileModal">Ajouter une image</button>
         </div>
     </center>
+    @if ($pictures)
+        @foreach($pictures as $picture)
+            <div style="width:230px;height: 230px; border: 1px solid whitesmoke ;text-align: center;float: left" id="image">
+                <img width="100%" height="100%" id="picture_{{ $picture->id }}" src="{{asset('uploads')}}/{{ $picture->url }}"/>
+                <a href="javascript:removeFile('{{ $picture->id }}','{{ $picture->url }}')" class="btn btn-info btn-lg">
+                    <span class="glyphicon glyphicon-remove"></span> Remove 
+                </a>
+            </div>
+        @endforeach
+     @endif
+    
+    
+
     <div class="modal fade" id="fileModal" tabindex="-1" role="dialog" aria-labelledby="fileModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -130,29 +142,29 @@
         });
     });
     
-    function removeFile() {
-        if ($('#file_name').val() != '')
+    function removeFile(id, url) {
+        if (id != '' && id > 0 && url != '') {
             if (confirm('Are you sure want to remove this picture?')) {
                 $('#loading').css('display', 'block');
                 var form_data = new FormData();
-                form_data.append('_method', 'DELETE');
-                form_data.append('token', '{{csrf_token()}}');
+                form_data.append('_token', '{{csrf_token()}}');
+                form_data.append('id', id);
+                form_data.append('url', url);
                 $.ajax({
-                    url: "uploader/remove",
+                    url: "{{url('uploader/remove')}}",
                     data: form_data,
                     type: 'POST',
                     contentType: false,
                     processData: false,
                     success: function (data) {
-                        $('#preview_image').attr('src', '{{asset('images/noimage.jpg')}}');
-                        $('#file_name').val('');
-                        $('#loading').css('display', 'none');
+                        $('#picture_' + id).parent().hide();
                     },
                     error: function (xhr, status, error) {
                         alert(xhr.responseText);
                     }
                 });
             }
+        }
     }
 </script>
 </body>

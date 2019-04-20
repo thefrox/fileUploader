@@ -25,3 +25,6 @@ Route::get('/login/logout', 'LoginController@logout');
 Route::get('/uploader', 'UploaderController@index');
 Route::match(['get', 'post'], '/uploader/add', 'UploaderController@add');
 Route::match(['get', 'post'], '/uploader/remove', 'UploaderController@remove');
+
+// Email related routes
+Route::get('mail/send', 'NotificationMailController@send');
