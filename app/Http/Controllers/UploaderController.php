@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\File;
-use App\Mail\NotificationMail;
+use App\Jobs\ResizePicture;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\File as Binary;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,7 +20,7 @@ class UploaderController extends Controller
        
     public function store(Request $file)
     {
-        $file->validate([
+        $validation = $file->validate([
             'name'    => 'required:max:255',
             'email'   => 'required:max:255',
             'width'   => 'required|numeric',
@@ -29,12 +29,12 @@ class UploaderController extends Controller
             'url'     => 'required:max:255',       
         ]);
 
-        File::create($file->all());
-
-        //Send notification by mail
-        Mail::to("receiver@example.com")->send(new NotificationMail($file));
-
-      return back()->with('message', 'Your file is submitted Successfully');
+        //Store in db
+        $id = File::create($file->all())->id;
+        //start job delay queue to resize and notify customer
+        $job = (new ResizePicture($id, 2))->delay(Carbon::now()->addSeconds(30));
+        $this->dispatch($job);
+        return back()->with('message', 'Your file is submitted Successfully');
     }
     
     public function add(Request $request)
@@ -64,7 +64,7 @@ class UploaderController extends Controller
                 'email' => $request->get('email'),
                 'width' => $width,
                 'height' => $height,
-                'weight' => filesize($dir.'/'.$filename)/pow(1024, 2), //Mo - $request->file('file')->getSize(),
+                'weight' => filesize($dir.'/'.$filename)/1024, //Kb - $request->file('file')->getSize(),
                 'url'   => $filename,
             ]);
             

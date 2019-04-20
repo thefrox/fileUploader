@@ -10,10 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::get('/', function () {
-    return view('login');
-});
+//Index redirect to login
+Route::get('/', 'LoginController@index');
 
 //Login
 Route::get('/login', 'LoginController@index');
