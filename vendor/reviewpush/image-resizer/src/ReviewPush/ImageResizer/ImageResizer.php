@@ -41,28 +41,32 @@ class ImageResizer {
     {
         if ( ! extension_loaded('gd'))
         {
-                throw new \Exception('The PHP GD extension does not exist!');
+            throw new \Exception('The PHP GD extension does not exist!');
         }
 
-        $this->exif = @exif_read_data($this->filename);
-        list($this->width, $this->height, $this->type) = getimagesize($filename);
+        if(function_exists('exif_read_data'))
+        {  
+            $this->exif = @exif_read_data($this->filename);
+            list($this->width, $this->height, $this->type) = getimagesize($filename);
 
-        switch ($this->type)
-        {
+            switch ($this->type)
+            {
                 case IMAGETYPE_JPEG:
-                        $this->file = imagecreatefromjpeg($filename);
-                        break;
+                    $this->file = imagecreatefromjpeg($filename);
+                    break;
                 case IMAGETYPE_PNG:
-                        $this->file = imagecreatefrompng($filename);
-                        break;
+                    $this->file = imagecreatefrompng($filename);
+                    break;
                 case IMAGETYPE_GIF:
-                        $this->file = imagecreatefromgif($filename);
-                        break;
+                    $this->file = imagecreatefromgif($filename);
+                    break;
                 default:
-                        throw new Exception\InvalidImageInputTypeException('Attempted to load a non-supported image');
+                    throw new Exception\InvalidImageInputTypeException('Attempted to load a non-supported image');
+            }
+            return $this;
+        }else{
+            throw new \Exception('The PHP Exif extension does not exist!');
         }
-
-        return $this;
     }
 
 
@@ -104,22 +108,22 @@ class ImageResizer {
         $this->setImageSize();
         switch ($type)
         {
-                case 'jpg':
-                        if ( ! imagejpeg($this->file, $filename, $this->quality))
-                                throw new Exception\FileNotWritableException('jpg file could not be saved!');
-                        break;
-                case 'png':
-                        imagealphablending($this->file, FALSE);
-                        imagesavealpha($this->file, TRUE);
-                        if ( ! imagepng($this->file, $filename))
-                                throw new Exception\FileNotWritableException('png file could not be saved!');
-                        break;
-                case 'gif':
-                        if ( ! imagegif($this->file, $filename, $this->quality))
-                                throw new Exception\FileNotWritableException('gif file could not be saved!');
-                        break;
-                default:
-                        throw new Exception\InvalidImageOutputTypeException('Bad filetype given, must be jpg, png or gif');
+            case 'jpg':
+                if ( ! imagejpeg($this->file, $filename, $this->quality))
+                    throw new Exception\FileNotWritableException('jpg file could not be saved!');
+                break;
+            case 'png':
+                imagealphablending($this->file, FALSE);
+                imagesavealpha($this->file, TRUE);
+                if ( ! imagepng($this->file, $filename))
+                    throw new Exception\FileNotWritableException('png file could not be saved!');
+                break;
+            case 'gif':
+                if ( ! imagegif($this->file, $filename, $this->quality))
+                    throw new Exception\FileNotWritableException('gif file could not be saved!');
+                break;
+            default:
+                throw new Exception\InvalidImageOutputTypeException('Bad filetype given, must be jpg, png or gif');
         }
         return $this;
     }

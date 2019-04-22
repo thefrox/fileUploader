@@ -6,7 +6,6 @@ use Carbon\Carbon;
 use App\File;
 use App\Jobs\ResizePicture;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File as Binary;
 use Illuminate\Support\Facades\Validator;
 
@@ -59,17 +58,16 @@ class UploaderController extends Controller
             $filename = uniqid() . '_' . time() . '.' . $extension;
             $request->file('file')->move($dir, $filename);
             list($width, $height) = getimagesize($dir.'/'.$filename);
-            $file = new Request([
+            $file = [
                 'name' => $request->get('name'),
                 'email' => $request->get('email'),
                 'width' => $width,
                 'height' => $height,
                 'weight' => filesize($dir.'/'.$filename)/1024, //Kb - $request->file('file')->getSize(),
                 'url'   => $filename,
-            ]);
-            
-            $this->store($file); //storage in db
-            return $filename;
+            ];
+            $file = File::create($file);
+            return array('url' => $filename, 'id' => $file->id);
         }
     }
 
@@ -83,8 +81,6 @@ class UploaderController extends Controller
         //remove from binary
         if(Binary::exists(public_path('uploads/'.$request->get('url')))){
             Binary::delete(public_path('uploads/'.$request->get('url')));
-        }else{
-            return "404";
         }
     }
 }

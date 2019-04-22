@@ -5,7 +5,6 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
  
 class NotificationMail extends Mailable
 {
@@ -40,12 +39,10 @@ class NotificationMail extends Mailable
                     ->text('mails.notification_plain')
                     ->with(
                       [
-                            'testVarOne' => '1',
-                            'testVarTwo' => '2',
-                      ])
-                      ->attach(public_path('/images').'/notification.jpg', [
-                              'as' => 'notification.jpg',
-                              'mime' => 'image/jpeg',
+                            'file' => $this->notification->file,
+                            'width' => $this->notification->width,
+                            'height' => $this->notification->height,
+                            'weight' => $this->notification->weight,
                       ]);
     }
 }
