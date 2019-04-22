@@ -1,0 +1,19 @@
+{
+    "name": "bluemega/image-resizer",
+    "description": "A simple proportional image resizer",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "thefrox",
+            "email": "thefrox@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "BlueMega\\Image-resizer\\": "src"
+        }
+    }
+}

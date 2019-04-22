@@ -1,1 +1,0 @@
-# Image Resizer for Laravel

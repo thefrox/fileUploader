@@ -2,7 +2,6 @@
 
 namespace App\Jobs;
 
-use Log;
 use App\File;
 use Illuminate\Bus\Queueable;
 use App\Mail\NotificationMail;
@@ -11,7 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
-use ReviewPush\ImageResizer\ImageResizer;
+use BlueMega\ImageResizer\ImageResizer;
 
 class ResizePicture implements ShouldQueue
 {
@@ -26,10 +25,8 @@ class ResizePicture implements ShouldQueue
      */
     public function __construct($id, $scale)
     {
-        Log::error('apres construc');
         $this->id = $id;
         $this->scale = $scale;
-         error_log('Job failed');
     }
 
     /**

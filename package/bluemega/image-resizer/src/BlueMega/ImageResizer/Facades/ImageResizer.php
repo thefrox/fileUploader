@@ -1,6 +1,6 @@
 <?php
 
-namespace ReviewPush\ImageResizer\Facades;
+namespace BlueMega\ImageResizer\Facades;
  
 use Illuminate\Support\Facades\Facade;
  

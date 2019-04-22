@@ -1,6 +1,6 @@
 <?php 
 
-namespace ReviewPush\ImageResizer;
+namespace BlueMega\ImageResizer;
 
 use Illuminate\Support\ServiceProvider;
 

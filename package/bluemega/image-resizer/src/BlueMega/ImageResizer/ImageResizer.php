@@ -1,6 +1,6 @@
 <?php
 
-namespace ReviewPush\ImageResizer;
+namespace BlueMega\ImageResizer;
 
 class ImageResizer {
 
@@ -41,7 +41,7 @@ class ImageResizer {
     {
         if ( ! extension_loaded('gd'))
         {
-            throw new \Exception('The PHP GD extension does not exist!');
+            
         }
 
         if(function_exists('exif_read_data'))
