@@ -11,8 +11,8 @@ class ImageResizer extends Facade {
    *
    * @return string
    */
-	protected static function getFacadeAccessor()
-	{
-		return 'imageresizer';
-	}
+    protected static function getFacadeAccessor()
+    {
+        return 'imageresizer';
+    }
 }
