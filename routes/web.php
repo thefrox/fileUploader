@@ -11,18 +11,22 @@
 |
 */
 //Index redirect to login
-Route::get('/', 'LoginController@index');
+Route::get('/', 'HomeController@index');
+Auth::routes(['register' => false]);
 
-//Login
-Route::get('/login', 'LoginController@index');
-Route::post('/login/checklogin', 'LoginController@checklogin');
-Route::get('/login/successlogin', 'LoginController@successlogin');
-Route::get('/login/logout', 'LoginController@logout');
 
-//FileUploader
-Route::get('/uploader', 'UploaderController@index');
-Route::match(['get', 'post'], '/uploader/add', 'UploaderController@add');
-Route::match(['get', 'post'], '/uploader/remove', 'UploaderController@remove');
+Route::middleware(['auth'])->group(function () {
+    //FileUploader
+    Route::get('/uploader', 'UploaderController@index');
+    Route::match(['get', 'post'], '/uploader/add', 'UploaderController@add');
+    Route::match(['get', 'post'], '/uploader/remove', 'UploaderController@remove');
+});
 
-// Email related routes
-Route::get('mail/send', 'NotificationMailController@send');
+Route::group(['namespace' => 'Site', 'prefix' => 'admin'], function () {
+    Route::get('/', 'Auth\LoginController@showLoginForm');
+    Route::post('login', 'Auth\LoginController@login');
+    Route::post('logout', 'Auth\LoginController@logout');
+});
+
+Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/logout', '\App\Http\Controllers\Auth\LoginController@logout');
